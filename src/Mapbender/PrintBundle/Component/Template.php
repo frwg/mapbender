@@ -28,36 +28,32 @@ class Template implements \ArrayAccess
     const ORIENTATION_PORTRAIT = 'portrait';
 
     /** @var float in mm*/
-    protected $width;
+    protected float $width;
     /** @var float in mm*/
-    protected $height;
-    /** @var string */
-    protected $orientation;
-    /** @var RegionCollection */
-    protected $textFields;
-    /** @var RegionCollection */
-    protected $regions;
+    protected float $height;
+    protected string $orientation;
+    protected RegionCollection $textFields;
+    protected RegionCollection $regions;
 
     /**
      * @param float $width in mm
      * @param float $height in mm
      * @param string $orientation
      */
-    public function __construct($width, $height, $orientation)
+    public function __construct(float $width, float $height, string $orientation)
     {
-        if ($width <= 0 || $height <=0) {
-            throw new \InvalidArgumentException("Invalid width / height "
-                . print_r($width, true) . ' ' . print_r($height, true));
+        if ($width <= 0 || $height <= 0) {
+            throw new \InvalidArgumentException("Invalid width / height " . $width . ' ' . $height);
         }
-        $this->width = floatval($width);
-        $this->height = floatval($height);
+        $this->width = $width;
+        $this->height = $height;
         switch ($orientation) {
             case self::ORIENTATION_LANDSCAPE:
             case self::ORIENTATION_PORTRAIT:
                 $this->orientation = $orientation;
                 break;
             default:
-                throw new \InvalidArgumentException("Invalid orientation " . print_r($orientation, true));
+                throw new \InvalidArgumentException("Invalid orientation " . $orientation);
         }
 
         $this->textFields = new RegionCollection();
@@ -67,7 +63,7 @@ class Template implements \ArrayAccess
     /**
      * @return string
      */
-    public function getOrientation()
+    public function getOrientation(): string
     {
         return $this->orientation;
     }
@@ -75,7 +71,7 @@ class Template implements \ArrayAccess
     /**
      * @return float
      */
-    public function getWidth()
+    public function getWidth(): float
     {
         return $this->width;
     }
@@ -83,7 +79,7 @@ class Template implements \ArrayAccess
     /**
      * @return float
      */
-    public function getHeight()
+    public function getHeight(): float
     {
         return $this->height;
     }
@@ -91,7 +87,7 @@ class Template implements \ArrayAccess
     /**
      * @return RegionCollection|TemplateRegion[]
      */
-    public function getRegions()
+    public function getRegions(): RegionCollection
     {
         return $this->regions;
     }
@@ -99,34 +95,34 @@ class Template implements \ArrayAccess
     /**
      * @return RegionCollection|TemplateRegion[]
      */
-    public function getTextFields()
+    public function getTextFields(): RegionCollection
     {
         return $this->textFields;
     }
 
     /**
-     * @param string
+     * @param string $name
      * @return TemplateRegion
      */
-    public function getRegion($name)
+    public function getRegion($name): TemplateRegion
     {
         return $this->regions->getMember($name);
     }
 
     /**
-     * @param string
+     * @param string $name
      * @return bool
      */
-    public function hasRegion($name)
+    public function hasRegion($name): bool
     {
         return $this->regions->hasMember($name);
     }
 
     /**
-     * @param string
+     * @param string $name
      * @return bool
      */
-    public function hasTextField($name)
+    public function hasTextField($name): bool
     {
         return $this->textFields->hasMember($name);
     }
@@ -134,7 +130,7 @@ class Template implements \ArrayAccess
     /**
      * @param TemplateRegion $region
      */
-    public function addRegion($region)
+    public function addRegion($region): void
     {
         $region->setParentTemplate($this);
         $this->regions->addMember($region->getName(), $region);
@@ -143,7 +139,7 @@ class Template implements \ArrayAccess
     /**
      * @param TemplateRegion $field
      */
-    public function addTextField($field)
+    public function addTextField($field): void
     {
         $field->setParentTemplate($this);
         $this->textFields->addMember($field->getName(), $field);

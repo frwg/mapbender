@@ -182,6 +182,7 @@
             <argument type="service" id="mapbender.source.typedirectory.service" />
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="Doctrine\ORM\EntityManagerInterface" />
+            <argument type="service" id="mapbender.wms.vendor_specific_handler" />
         </service>
 
         <service id="mapbender.source.metadata_listener" class="Mapbender\CoreBundle\Component\Source\SourceMetadataListener">

@@ -28,13 +28,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
 {
+    protected VendorSpecificHandler $vendorSpecificHandler;
 
     public function __construct(
         protected UrlProcessor           $urlProcessor,
         protected TokenStorageInterface  $tokenStorage,
         protected EntityManagerInterface $em,
-        protected ?string                $defaultLayerOrder)
+        protected ?string                $defaultLayerOrder,
+        ?VendorSpecificHandler           $vendorSpecificHandler = null)
     {
+        $this->vendorSpecificHandler = $vendorSpecificHandler ?? new VendorSpecificHandler();
     }
 
     /**
@@ -237,7 +240,7 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
      * @param WmsInstance $sourceInstance
      * @return string
      */
-    public function getUrlOption(WmsInstance $sourceInstance)
+    public function getUrlOption(WmsInstance $sourceInstance): string
     {
         $url = $sourceInstance->getSource()->getGetMap()->getHttpGet();
         if (!$this->useTunnel($sourceInstance)) {
@@ -252,8 +255,7 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
             }
         }
         $userToken = $this->tokenStorage->getToken();
-        $vsHandler = new VendorSpecificHandler();
-        $params = $vsHandler->getPublicParams($sourceInstance, $userToken);
+        $params = $this->vendorSpecificHandler->getPublicParams($sourceInstance, $userToken);
         return UrlUtil::validateUrl($url, $params);
     }
 
@@ -263,7 +265,7 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
      * @param WmsInstance $sourceInstance
      * @return float[][]
      */
-    public function getBboxConfiguration(WmsInstance $sourceInstance)
+    public function getBboxConfiguration(WmsInstance $sourceInstance): array
     {
         $rootLayer = $this->getRootLayerFromCache($sourceInstance);
         return $this->getLayerBboxConfiguration($rootLayer);
@@ -344,7 +346,7 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
      * @param WmsInstance $sourceInstance
      * @return array[]
      */
-    public function getDimensionsConfiguration(WmsInstance $sourceInstance)
+    public function getDimensionsConfiguration(WmsInstance $sourceInstance): array
     {
         $dimensionConfigs = array();
         $sourceDimensions = array();
@@ -447,10 +449,9 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
         }
 
         /** @var WmsInstance $sourceInstance */
-        $vsHandler = new VendorSpecificHandler();
         return
             (!!$sourceInstance->getSource()->getUsername()) ||
-            $vsHandler->hasHiddenParams($sourceInstance) ||
+            $this->vendorSpecificHandler->hasHiddenParams($sourceInstance) ||
             $sourceInstance->getProxy();
     }
 
@@ -468,7 +469,7 @@ class WmsSourceInstanceConfigGenerator extends SourceInstanceConfigGenerator
      * @return mixed[]
      * @todo: this should and can be part of the initial generation
      */
-    protected function proxifyLayerUrls($layerConfig, ?SourceInstance $sourceInstance = null)
+    protected function proxifyLayerUrls(array $layerConfig, ?SourceInstance $sourceInstance = null): array
     {
         /** @var ?WmsInstance $sourceInstance */
         if (isset($layerConfig['children'])) {

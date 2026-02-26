@@ -43,7 +43,7 @@ class ElementInventoryService extends ElementConfigFilter implements HttpHandler
     /** @var ElementServiceInterface[] */
     protected $serviceElements = array();
 
-    public function __construct($disabledClasses)
+    public function __construct(array $disabledClasses)
     {
         $this->disabledClassesFromConfig = $disabledClasses ?: array();
     }
