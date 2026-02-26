@@ -39,6 +39,8 @@ class InstanceTunnelService
     protected $tokenStorage;
     /** @var EntityManagerInterface */
     protected $entityManager;
+    /** @var VendorSpecificHandler */
+    protected $vendorSpecificHandler;
     /** @var Endpoint[] */
     protected $bufferedEndPoints = array();
     /** @var string */
@@ -52,18 +54,21 @@ class InstanceTunnelService
      * @param TypeDirectoryService $sourceTypeDirectory
      * @param TokenStorageInterface $tokenStorage
      * @param EntityManagerInterface $entityManager
+     * @param VendorSpecificHandler $vendorSpecificHandler
      */
     public function __construct(HttpTransportInterface $httpTransprot,
                                 RouterInterface        $router,
                                 TypeDirectoryService   $sourceTypeDirectory,
                                 TokenStorageInterface  $tokenStorage,
-                                EntityManagerInterface $entityManager)
+                                EntityManagerInterface $entityManager,
+                                ?VendorSpecificHandler $vendorSpecificHandler = null)
     {
         $this->httpTransport = $httpTransprot;
         $this->router = $router;
         $this->sourceTypeDirectory = $sourceTypeDirectory;
         $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
+        $this->vendorSpecificHandler = $vendorSpecificHandler ?? new VendorSpecificHandler();
         // @todo: TBD if it's worth making this configurable
         $this->tunnelRouteName = 'mapbender_core_instancetunnel_instancetunnel';
         $this->legendTunnelRouteName = 'mapbender_core_instancetunnel_instancetunnellegend';
@@ -103,8 +108,7 @@ class InstanceTunnelService
      */
     public function getPublicBaseUrl(Endpoint $endpoint)
     {
-        $vsHandler = new VendorSpecificHandler();
-        $vsParams = $vsHandler->getPublicParams($endpoint->getSourceInstance(), $this->tokenStorage->getToken());
+        $vsParams = $this->vendorSpecificHandler->getPublicParams($endpoint->getSourceInstance(), $this->tokenStorage->getToken());
         $params = array_replace($vsParams, array(
             'slug' => $endpoint->getApplicationEntity()->getSlug(),
             'instanceId' => $endpoint->getSourceInstance()->getId(),
@@ -221,10 +225,9 @@ class InstanceTunnelService
      * @param SourceInstance $instance
      * @return string[]
      */
-    public function getHiddenParams(SourceInstance $instance)
+    public function getHiddenParams(SourceInstance $instance): array
     {
-        $vsHandler = new VendorSpecificHandler();
-        return $vsHandler->getHiddenParams($instance, $this->tokenStorage->getToken());
+        return $this->vendorSpecificHandler->getHiddenParams($instance, $this->tokenStorage->getToken());
     }
 
     /**

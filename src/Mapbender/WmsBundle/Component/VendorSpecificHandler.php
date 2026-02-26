@@ -30,7 +30,7 @@ class VendorSpecificHandler
      * @param string $input
      * @return string|null
      */
-    public function findDynamicValuePortion($input)
+    public function findDynamicValuePortion(string $input): ?string
     {
         $matches = array();
         if (\preg_match('#\$[a-z]+\$#i', $input, $matches)) {
@@ -47,12 +47,12 @@ class VendorSpecificHandler
      * @param string $value
      * @return boolean true if a value is dynamic.
      */
-    public function isValueDynamic($value)
+    public function isValueDynamic(string $value): bool
     {
         return !!$this->findDynamicValuePortion($value);
     }
 
-    public function isValuePublic(VendorSpecific $vendorspec)
+    public function isValuePublic(VendorSpecific $vendorspec): bool
     {
         return !$vendorspec->getHidden();
     }
@@ -62,7 +62,7 @@ class VendorSpecificHandler
      * @param TokenInterface|null $userToken
      * @return string[]
      */
-    public function getPublicParams(SourceInstance $instance, TokenInterface $userToken=null)
+    public function getPublicParams(SourceInstance $instance, TokenInterface $userToken=null): array
     {
         $user = $this->getUserFromToken($userToken);
         $params = array();
@@ -80,7 +80,7 @@ class VendorSpecificHandler
      * @param TokenInterface|null $userToken
      * @return string[]
      */
-    public function getHiddenParams(SourceInstance $instance, TokenInterface $userToken=null)
+    public function getHiddenParams(SourceInstance $instance, TokenInterface $userToken=null): array
     {
         $user = $this->getUserFromToken($userToken);
         $params = array();
@@ -98,7 +98,7 @@ class VendorSpecificHandler
      * @param TokenInterface|null $userToken
      * @return string[]
      */
-    public function getAllParams(SourceInstance $instance, TokenInterface $userToken=null)
+    public function getAllParams(SourceInstance $instance, TokenInterface $userToken=null): array
     {
         $user = $this->getUserFromToken($userToken);
         $params = array();
@@ -116,7 +116,7 @@ class VendorSpecificHandler
      * @param SourceInstance|WmsInstance $instance; NOTE: lax typing to avoid conflicts with WMTS
      * @return bool
      */
-    public function hasHiddenParams(SourceInstance $instance)
+    public function hasHiddenParams(SourceInstance $instance): bool
     {
         foreach ($instance->getVendorspecifics() as $key => $vendorspec) {
             if ($this->isVendorSpecificValueValid($vendorspec) && !$this->isValuePublic($vendorspec)) {
@@ -130,7 +130,7 @@ class VendorSpecificHandler
      * @param TokenInterface $userToken
      * @return UserInterface|null
      */
-    protected function getUserFromToken(TokenInterface $userToken=null)
+    protected function getUserFromToken(TokenInterface $userToken=null): ?UserInterface
     {
         if (!$userToken || $userToken instanceof NullToken) {
             return null;
@@ -154,7 +154,7 @@ class VendorSpecificHandler
      * @param UserInterface|null $object
      * @return string|null
      */
-    public function getVendorSpecificValue(VendorSpecific $vs, $object)
+    public function getVendorSpecificValue(VendorSpecific $vs, $object): ?string
     {
         $value = $vs->getDefault();
         if ($vs->getVstype() !== VendorSpecific::TYPE_VS_SIMPLE) {
@@ -172,7 +172,7 @@ class VendorSpecificHandler
      * @param string $attributeName
      * @return string|null
      */
-    protected function extractDynamicReference(VendorSpecific $vs, $object, $attributeName)
+    protected function extractDynamicReference(VendorSpecific $vs, $object, string $attributeName): ?string
     {
         if (!$object || !is_object($object)) {
             return null;
@@ -205,7 +205,7 @@ class VendorSpecificHandler
         }
     }
 
-    public function isVendorSpecificValueValid(VendorSpecific $vs)
+    public function isVendorSpecificValueValid(VendorSpecific $vs): bool
     {
         if ($vs->getDefault()) {
             return true;
