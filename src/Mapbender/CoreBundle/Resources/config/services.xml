@@ -164,7 +164,7 @@
                  class="%assetic.filter.scss.class%"
                  lazy="true">
             <call method="addImportPath">
-                <argument>%kernel.project_dir%/mapbender/src/Mapbender/CoreBundle/Resources/public/sass</argument>
+                <argument>%kernel.project_dir%/vendor/frwg/mapbender/src/Mapbender/CoreBundle/Resources/public/sass</argument>
             </call>
             <call method="addImportPath">
                 <argument>%kernel.project_dir%/public</argument>
