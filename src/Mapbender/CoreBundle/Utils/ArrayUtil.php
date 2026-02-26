@@ -45,26 +45,6 @@ class ArrayUtil
     }
 
     /**
-     * Check if array has a key and return the value, other way set new one and return it.
-     *
-     * @deprecated THIS MODIFIES THE ARRAY BY WRITING THE KEY INTO THE KEY NOT THE VALUE YOU HAVE BEEN WARNED
-     * @internal
-     *
-     * @param array $arr
-     * @param string $key array key to check for existens
-     * @param null  $value default value if key doesn't exists
-     * @return mixed new value
-     */
-    public static function hasSet(array &$arr, $key, $value = null){
-        if(isset($arr[$key])){
-            return $arr[$key];
-        }else{
-            $arr[$key] = $key;
-            return $value;
-        }
-    }
-
-    /**
      * Extract and return the value (or $default if missing) with given $key from given array.
      *
      * @param array $arr

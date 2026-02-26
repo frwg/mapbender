@@ -8,7 +8,7 @@ use FOM\UserBundle\Security\Permission\ResourceDomainInstallation;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FOM\ManagerBundle\Configuration\Route;
+use FOM\ManagerBundle\Configuration\Route as ManagerRoute;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,7 +32,7 @@ class GroupController extends AbstractController
      * @return Response
      * @throws \Exception
      */
-    #[Route('/group/new', methods: ['GET', 'POST'])]
+    #[ManagerRoute('/group/new', methods: ['GET', 'POST'])]
     public function create(Request $request)
     {
         $group = new Group();
@@ -70,7 +70,7 @@ class GroupController extends AbstractController
      * @param string $id
      * @return Response
      */
-    #[Route('/group/{id}/edit', methods: ['GET', 'POST'])]
+    #[ManagerRoute('/group/{id}/edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(ResourceDomainInstallation::ACTION_EDIT_GROUPS);
@@ -123,7 +123,7 @@ class GroupController extends AbstractController
      * @param string $id
      * @return Response
      */
-    #[Route('/group/{id}/delete', methods: ['POST'])]
+    #[ManagerRoute('/group/{id}/delete', methods: ['POST'])]
     public function delete(Request  $request, $id)
     {
         /** @var Group|null $group */
