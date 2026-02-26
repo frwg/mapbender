@@ -2,7 +2,7 @@
 
 namespace FOM\UserBundle\Controller;
 
-use FOM\ManagerBundle\Configuration\Route;
+use FOM\ManagerBundle\Configuration\Route as ManagerRoute;
 use FOM\UserBundle\Form\Type\PermissionListType;
 use FOM\UserBundle\Security\Permission\AssignableSubject;
 use FOM\UserBundle\Security\Permission\PermissionManager;
@@ -25,7 +25,7 @@ class PermissionController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/security/edit/{category}', methods: ['GET', 'POST'])]
+    #[ManagerRoute('/security/edit/{category}', methods: ['GET', 'POST'])]
     public function edit(Request $request, string $category)
     {
         $this->denyAccessUnlessGranted(ResourceDomainInstallation::ACTION_MANAGE_PERMISSION);
@@ -69,7 +69,7 @@ class PermissionController extends AbstractController
         ));
     }
 
-    #[Route('/permission/overview', methods: ['GET'])]
+    #[ManagerRoute('/permission/overview', methods: ['GET'])]
     public function overview(Request $request): Response
     {
         $assignableSubjects = $this->permissionManager->getAssignableSubjects();

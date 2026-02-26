@@ -58,7 +58,7 @@ class ElementMarkupRenderer
         $markupFragments = array();
         foreach ($elements as $element) {
             if (!$element instanceof Element) {
-                throw new \InvalidArgumentException("Unsupported type " . ($element && \is_object($element)) ? \get_class($element) : gettype($element));
+                throw new \InvalidArgumentException("Unsupported type " . (($element && \is_object($element)) ? \get_class($element) : gettype($element)));
             }
             $regionName = $element->getRegion();
             if (!array_key_exists($regionName, $wrappers)) {
@@ -88,7 +88,7 @@ class ElementMarkupRenderer
         $markup = '';
         foreach ($elements as $element) {
             if (!$element instanceof Element) {
-                throw new \InvalidArgumentException("Unsupported type " . ($element && \is_object($element)) ? \get_class($element) : gettype($element));
+                throw new \InvalidArgumentException("Unsupported type " . (($element && \is_object($element)) ? \get_class($element) : gettype($element)));
             }
             $content = $this->renderContent($element, 'div', array());
             $markup .= $this->wrapTag($content, 'div', array(
