@@ -69,7 +69,7 @@
         "wheregroup/doctrine-dbal-shims": "^1.2",
 
         "components/jquery": "^3.7.1",
-        "jquery/jquery-ui": "^1.13.2",",
+        "jquery/jquery-ui": "^1.13.2",
         "datatables.net/datatables.net-bs5": "^2.3",
         "twbs/bootstrap": "^5.0",
 
